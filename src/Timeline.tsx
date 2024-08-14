@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { createShapeId, TLShapeId, useEditor } from 'tldraw';
 
 interface sizeOfTimelineProps {
