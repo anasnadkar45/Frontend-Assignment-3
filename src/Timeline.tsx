@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react';
 import { createShapeId, TLShapeId, useEditor } from 'tldraw';
 
 interface sizeOfTimelineProps {
@@ -9,15 +9,35 @@ const Timeline = ({ sizeOfTimeline }: sizeOfTimelineProps) => {
     const editor = useEditor();
     const ids: TLShapeId[] = [];
 
-    const createShape = (id: TLShapeId, type: string, x: number, y: number, props: any) => {
-        ids.push(id);
-        editor.createShape({ id, type, x, y, props });
-    };
-
-    useEffect(() => {
+    const shapes = useMemo(() => {
+        const shapeIds: TLShapeId[] = [];
         if (sizeOfTimeline === 0) {
             const initialId = createShapeId();
-            ids.push(initialId);
+            shapeIds.push(initialId);
+        } else {
+            const timelineAxisId = createShapeId();
+            shapeIds.push(timelineAxisId);
+
+            for (let i = 0; i < sizeOfTimeline; i++) {
+                const timelineId = createShapeId();
+                shapeIds.push(timelineId);
+
+                const headingId = createShapeId();
+                shapeIds.push(headingId);
+
+                const descriptionId = createShapeId();
+                shapeIds.push(descriptionId);
+            }
+        }
+        return shapeIds;
+    }, [sizeOfTimeline]);
+
+    useEffect(() => {
+        
+        ids.length = 0; // Reset IDs on each effect call
+
+        if (sizeOfTimeline === 0) {
+            const initialId = shapes[0];
             editor.createShape({
                 id: initialId,
                 type: "geo",
@@ -29,8 +49,7 @@ const Timeline = ({ sizeOfTimeline }: sizeOfTimelineProps) => {
                 },
             });
         } else {
-            const timelineAxisId = createShapeId();
-            ids.push(timelineAxisId);
+            const timelineAxisId = shapes[0];
             editor.createShape({
                 id: timelineAxisId,
                 type: "line",
@@ -51,8 +70,7 @@ const Timeline = ({ sizeOfTimeline }: sizeOfTimelineProps) => {
             });
 
             for (let i = 0; i < sizeOfTimeline; i++) {
-                const timelineId = createShapeId();
-                ids.push(timelineId);
+                const timelineId = shapes[i + 1]; // Get timeline ID
                 editor.createShape({
                     id: timelineId,
                     type: "line",
@@ -72,10 +90,9 @@ const Timeline = ({ sizeOfTimeline }: sizeOfTimelineProps) => {
                     },
                 });
 
-                const timelineHeadingId = createShapeId();
-                ids.push(timelineHeadingId);
+                const headingId = shapes[i + 1 + sizeOfTimeline]; // Get heading ID
                 editor.createShape({
-                    id: timelineHeadingId,
+                    id: headingId,
                     type: "text",
                     x: i * 100 + 500,
                     y: i % 2 === 0 ? 180 : 360,
@@ -85,10 +102,9 @@ const Timeline = ({ sizeOfTimeline }: sizeOfTimelineProps) => {
                     },
                 });
 
-                const timelineDescriptionId = createShapeId();
-                ids.push(timelineDescriptionId);
+                const descriptionId = shapes[i + 1 + sizeOfTimeline * 2]; // Get description ID
                 editor.createShape({
-                    id: timelineDescriptionId,
+                    id: descriptionId,
                     type: "text",
                     x: i * 100 + 500,
                     y: i % 2 === 0 ? 210 : 390,
@@ -101,11 +117,11 @@ const Timeline = ({ sizeOfTimeline }: sizeOfTimelineProps) => {
         }
 
         return () => {
-            editor.deleteShapes(ids);
+            editor.deleteShapes(shapes); 
         };
-    }, [sizeOfTimeline]);
+    }, [shapes, editor, sizeOfTimeline]);
 
     return null;
-}
+};
 
-export default Timeline
+export default Timeline;
