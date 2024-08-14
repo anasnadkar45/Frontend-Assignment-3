@@ -1,4 +1,4 @@
-import { Tldraw, createShapeId } from "tldraw";
+import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
 import Timeline from "./Timeline";
 
