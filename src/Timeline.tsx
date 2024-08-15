@@ -33,20 +33,36 @@ const Timeline = ({ sizeOfTimeline }: sizeOfTimelineProps) => {
     }, [sizeOfTimeline]);
 
     useEffect(() => {
-        
+
         ids.length = 0; // Reset IDs on each effect call
 
         if (sizeOfTimeline === 0) {
             const initialId = shapes[0];
             editor.createShape({
                 id: initialId,
-                type: "geo",
-                x: 500,
-                y: 200,
-                props: {
-                    text: "Click on Create Timeline to add a timeline! Press 'c' key to create a timeline.",
-                    w: 400,
+                "type": "geo",
+                "x": 520,
+                "y": 200,
+                "rotation": 0,
+                "opacity": 1,
+                "isLocked": false,
+                "props": {
+                    "w": 400,
+                    "h": 200,
+                    "geo": "rectangle",
+                    "color": "black",
+                    "labelColor": "black",
+                    "fill": "solid",
+                    "dash": "draw",
+                    "size": "m",
+                    "font": "draw",
+                    "text": "Click on Create Timeline button to create a new Timeline",
+                    "align": "middle",
+                    "verticalAlign": "middle",
+                    "growY": 0,
+                    "url": ""
                 },
+                "meta": {},
             });
         } else {
             const timelineAxisId = shapes[0];
@@ -57,6 +73,7 @@ const Timeline = ({ sizeOfTimeline }: sizeOfTimelineProps) => {
                 y: 300,
                 props: {
                     size: "l",
+                    color: "black",
                     points: {
                         start: { id: "1", index: timelineAxisId, x: 0, y: 0 },
                         end: {
@@ -117,7 +134,7 @@ const Timeline = ({ sizeOfTimeline }: sizeOfTimelineProps) => {
         }
 
         return () => {
-            editor.deleteShapes(shapes); 
+            editor.deleteShapes(shapes);
         };
     }, [shapes, editor, sizeOfTimeline]);
 
