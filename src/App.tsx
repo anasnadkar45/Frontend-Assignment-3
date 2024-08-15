@@ -11,12 +11,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { exportToBlob } from "tldraw";
+import { exportToBlob , TldrawEditor} from "tldraw";
 
 export default function App() {
   const [sizeOfTimeline, setSizeOfTimeline] = useState<number>(0);
   const [totalTimeline, setTotalTimeline] = useState<number>(0);
-  const [editor, setEditor] = useState(null); 
+  const [editor, setEditor] = useState<TldrawEditor | null>(null);; 
 
   const handleGenerate = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
